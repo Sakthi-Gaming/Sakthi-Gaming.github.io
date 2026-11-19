@@ -80,6 +80,27 @@ h1 .gold{animation:shimmer 6s ease-in-out infinite}
 
 /* home modules */
 .mods{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mod.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;padding:10px 16px 10px 10px}
+.mod.wide .glyph{flex:none;width:118px;margin:0}
+.mod .mt{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.mod .mt .bar{margin-top:auto;position:relative;top:8px}
+.mod{padding-bottom:22px!important}
+.mod.wide .mt{flex:1}
+.mod.wide .bar{margin:8px 4px 0}
+.newtag{align-self:flex-start;margin-left:4px;white-space:nowrap;margin-bottom:2px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--night);background:var(--goldfill);border-radius:99px;padding:2px 9px}
+/* trace pad */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:var(--glass);border:1px solid var(--hair)}
+.segb{border:0;background:transparent;border-radius:999px;padding:7px 6px;font-family:var(--display);font-weight:700;font-size:15px;color:var(--mist)}
+.segb[aria-pressed="true"]{background:rgba(255,255,255,.12);color:var(--ivory);box-shadow:inset 0 0 0 1px var(--line)}
+.chip.done{position:relative}
+.chip.done::after{content:"✦";position:absolute;top:1px;right:4px;font-size:9px;color:var(--gold)}
+.pad{position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:1;border-radius:30px;overflow:hidden;
+  background:radial-gradient(90% 70% at 50% 35%,var(--surface-2),var(--surface) 70%,#17132F);border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 40px 60px -36px rgba(0,0,0,.85)}
+.pad canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.padtip{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:13px;color:var(--mist);pointer-events:none;transition:opacity .3s}
+.tstars{font-size:30px;letter-spacing:4px;color:var(--gold);text-shadow:0 0 14px rgba(233,196,106,.8)}
+.tstars s{text-decoration:none;color:rgba(255,255,255,.14);text-shadow:none}
 .mod{--c:var(--coral);position:relative;overflow:hidden;text-align:left;border-radius:26px;padding:10px 10px 14px;display:flex;flex-direction:column;gap:3px;min-width:0;
   background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--hair);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 24px 40px -24px rgba(0,0,0,.8);transition:transform .18s,border-color .18s}
@@ -293,7 +314,7 @@ PAZ.forEach((x,i)=>x.c=COLORS[i%4]);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let stars=store.get("kk_stars",0);
-const seen={}; ["uyir","mei","uyirmei","paz"].forEach(k=>seen[k]=new Set(store.get("kk_seen_"+k,[])));
+const seen={}; ["trace","uyir","mei","uyirmei","paz"].forEach(k=>seen[k]=new Set(store.get("kk_seen_"+k,[])));
 function markSeen(mod,key){if(seen[mod].has(key))return;seen[mod].add(key);store.set("kk_seen_"+mod,[...seen[mod]]);addStars(1);tone([660,880])}
 const starsEl=document.getElementById("stars");
 function addStars(n){stars+=n;store.set("kk_stars",stars);starsEl.textContent="★ "+stars;starsEl.classList.remove("pop");void starsEl.offsetWidth;starsEl.classList.add("pop")}
@@ -351,7 +372,9 @@ const pickOthers=(n,ex,k)=>shuffle([...Array(n).keys()].filter(i=>i!==ex)).slice
 /* ---------- MODULES ---------- */
 const MODS={
  uyir:{ta:"உயிர் எழுத்து",en:"Vowels · 12 letters",glyph:"அ ஆ",c:"var(--coral)",total:12},
+ tuyir:{ta:"உயிர் எழுதுவோம்",en:"Trace & write",glyph:"✍️அ",c:"var(--coral)",total:12,set:"uyir",isNew:true,tabs:[["பார்த்து எழுது","Trace"],["கேட்டு எழுது","Listen & write"]]},
  mei:{ta:"மெய் எழுத்து",en:"Consonants · 18 letters",glyph:"க் ங்",c:"var(--teal)",total:18},
+ tmei:{ta:"மெய் எழுதுவோம்",en:"Trace & write",glyph:"✍️க்",c:"var(--teal)",total:18,set:"mei",isNew:true,tabs:[["பார்த்து எழுது","Trace"],["கேட்டு எழுது","Listen & write"]]},
  uyirmei:{ta:"உயிர்மெய் எழுத்து",en:"Letter maker · 216 letters",glyph:"க்+அ",c:"var(--grape)",total:216},
  paz:{ta:"பழமொழி",en:"Proverbs · "+PAZ.length+" sayings",glyph:"💬",c:"var(--leaf)",total:PAZ.length}
 };
@@ -359,11 +382,11 @@ const MODS={
 function home(){
   h(`<div class="col">
     <div class="bubble"><span class="ta">இன்று என்ன கற்போம்?</span>What shall we learn today? Pick one!</div>
-    <div class="mods">${Object.entries(MODS).map(([k,m])=>{const pct=Math.round(seen[k].size/m.total*100);return `
+    <div class="mods">${Object.entries(MODS).map(([k,m])=>{const got=m.set?[...seen.trace].filter(x=>x.startsWith(m.set+":")).length:seen[k].size;const pct=Math.round(got/m.total*100);return `
       <button class="mod" style="--c:${m.c}" data-k="${k}">
         <div class="glyph" aria-hidden="true">${m.glyph}</div>
-        <b>${m.ta}</b><small>${m.en}</small>
-        <div class="bar" aria-label="${pct}% explored"><i style="width:${Math.max(pct,2)}%"></i></div>
+        <div class="mt">${m.isNew?'<span class="newtag">புதிது · New</span>':""}<b>${m.ta}</b><small>${m.en}</small>
+        <div class="bar" aria-label="${pct}% explored"><i style="width:${Math.max(pct,2)}%"></i></div></div>
       </button>`}).join("")}</div>
   </div>`);
   view.querySelectorAll(".mod").forEach(b=>b.onclick=()=>openMod(b.dataset.k,"learn"));
@@ -374,12 +397,13 @@ function openMod(k,tab){
   h(`<div class="col">
     <div class="modtop"><button class="btn sm" id="bk">← முகப்பு</button><h2>${m.ta}<small>${m.en}</small></h2></div>
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tL" aria-selected="${tab==="learn"}"><b>கற்போம்</b><small>Learn</small></button>
-      <button class="tab" role="tab" id="tP" aria-selected="${tab==="play"}"><b>விளையாடுவோம்</b><small>Play</small></button>
+      <button class="tab" role="tab" id="tL" aria-selected="${tab==="learn"}"><b>${m.tabs?m.tabs[0][0]:"கற்போம்"}</b><small>${m.tabs?m.tabs[0][1]:"Learn"}</small></button>
+      <button class="tab" role="tab" id="tP" aria-selected="${tab==="play"}"><b>${m.tabs?m.tabs[1][0]:"விளையாடுவோம்"}</b><small>${m.tabs?m.tabs[1][1]:"Play"}</small></button>
     </div>
     <div id="body"></div>
   </div>`);
   $("bk").onclick=home;$("tL").onclick=()=>openMod(k,"learn");$("tP").onclick=()=>openMod(k,"play");
+  if(m.set){if(TR.set!==m.set)TR.i=0;TR.set=m.set;return traceScreen(tab==="learn"?"trace":"listen")}
   tab==="learn"?LEARN[k]():newGame(k);
 }
 const body=html=>{$("body").innerHTML=html};
@@ -463,6 +487,130 @@ function umBuilder(m,u){
   $("mc").querySelectorAll(".chip").forEach(b=>b.onclick=()=>umBuilder(+b.dataset.i,u));
   $("body").querySelectorAll(".umtile").forEach(b=>b.onclick=()=>umBuilder(m,+b.dataset.i));
   const sel=$("mc").querySelector('[aria-pressed="true"]');sel&&sel.scrollIntoView({block:"nearest",inline:"center"});
+}
+
+
+/* ---------- TRACE & WRITE ---------- */
+const TR={set:"uyir",i:0,mode:"trace",strokes:[],fails:0,done:false};
+const trList=s=>s==="uyir"?UYIR.map(x=>({l:x.l,r:x.r,c:x.c})):MEI.map(x=>({l:x.l,r:x.r,c:GROUPS[x.g].c}));
+const trKey=()=>TR.set+":"+TR.i;
+const FONT=(px)=>`700 ${px}px Arima, "Noto Sans Tamil", "Latha", serif`;
+function traceScreen(mode){
+  TR.mode=mode;
+  if(mode==="listen")TR.i=Math.random()*trList(TR.set).length|0;
+  trRender();
+}
+function trRender(){
+  const L=trList(TR.set),cur=L[TR.i],listen=TR.mode==="listen";
+  TR.strokes=[];TR.fails=0;TR.done=false;
+  body(`<div class="col">
+    ${listen
+      ?`<div class="q"><div class="qpic" aria-hidden="true">👂</div><div class="qt"><b>கேட்டு எழுது!</b><span>Listen, then write the letter. No peeking!</span></div><button class="say" id="say" aria-label="Hear the letter">🔊</button></div>`
+      :`<div class="chips" id="tc">${L.map((x,i)=>`<button class="chip ${seen.trace.has(TR.set+":"+i)?"done":""}" aria-pressed="${i===TR.i}" data-i="${i}">${x.l}</button>`).join("")}</div>`}
+    <div class="pad" id="pad"><canvas id="cv" aria-label="Writing pad"></canvas><div class="padtip" id="tip">✍️ விரலால் எழுது · Write with your finger</div></div>
+    <div class="row">
+      <button class="btn" id="clr">↺ அழி</button>
+      ${listen?"":`<button class="btn" id="hear">🔊 கேள்</button>`}
+      <button class="btn main" id="chk">✓ சரிபார்</button>
+    </div>
+    <div class="feedback" id="fb" aria-live="polite"></div>
+  </div>`);
+  if(!listen){
+    $("tc").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{TR.i=+b.dataset.i;trRender()});
+    const sel=$("tc").querySelector('[aria-pressed="true"]');sel&&sel.scrollIntoView({block:"nearest",inline:"center"});
+    $("hear").onclick=()=>speak(cur.l,cur.r);
+  }else $("say").onclick=()=>speak(cur.l,cur.r);
+  $("clr").onclick=()=>{TR.strokes=[];TR.done=false;$("fb").textContent="";$("chk").textContent="✓ சரிபார்";$("tip").style.opacity=1;trDraw()};
+  $("chk").onclick=()=>TR.done?trNext():trCheck();
+  trSetup();
+  speak(cur.l,cur.r);
+}
+let trCv,trCtx,trW,trG;
+function trSetup(){
+  trCv=$("cv");const pad=$("pad");const dpr=Math.min(window.devicePixelRatio||1,3);
+  trW=pad.clientWidth||320;trCv.width=trW*dpr;trCv.height=trW*dpr;
+  trCtx=trCv.getContext("2d");trCtx.setTransform(dpr,0,0,dpr,0,0);
+  const go=()=>{trG=trGlyph(trCtx,trW);trDraw()};
+  (document.fonts&&document.fonts.load?document.fonts.load(FONT(100),"அகஔ").catch(()=>{}):Promise.resolve()).then(go);
+  go();
+  let drawing=false;
+  const pt=e=>{const r=trCv.getBoundingClientRect();return{x:(e.clientX-r.left)*trW/r.width,y:(e.clientY-r.top)*trW/r.height}};
+  trCv.onpointerdown=e=>{if(TR.done)return;e.preventDefault();drawing=true;trCv.setPointerCapture(e.pointerId);TR.strokes.push([pt(e)]);$("tip").style.opacity=0;trDraw()};
+  trCv.onpointermove=e=>{if(!drawing)return;e.preventDefault();TR.strokes[TR.strokes.length-1].push(pt(e));trDraw()};
+  trCv.onpointerup=trCv.onpointercancel=()=>{drawing=false};
+}
+/* fit the glyph in the pad and centre it by its real ink box */
+function trGlyph(ctx,W){
+  const l=trList(TR.set)[TR.i].l;let px=W*.7;ctx.font=FONT(px);let m=ctx.measureText(l);
+  const fit=()=>{const w=m.actualBoundingBoxLeft+m.actualBoundingBoxRight,h=m.actualBoundingBoxAscent+m.actualBoundingBoxDescent;return Math.min(W*.78/w,W*.66/h)};
+  px*=fit();ctx.font=FONT(px);m=ctx.measureText(l);
+  const w=m.actualBoundingBoxLeft+m.actualBoundingBoxRight,h=m.actualBoundingBoxAscent+m.actualBoundingBoxDescent;
+  const x=W/2-w/2+m.actualBoundingBoxLeft,y=W*.47+h/2-m.actualBoundingBoxDescent;
+  return{l,px,x,y,box:{x:W/2-w/2,y:W*.47-h/2,w,h}};
+}
+function trInk(ctx,W,strokes,map,lw){
+  ctx.lineCap="round";ctx.lineJoin="round";ctx.lineWidth=lw;
+  strokes.forEach(st=>{ctx.beginPath();st.forEach((p,i)=>{const q=map?map(p):p;i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)});if(st.length===1){const q=map?map(st[0]):st[0];ctx.lineTo(q.x+.1,q.y)}ctx.stroke()});
+}
+function trDraw(reveal){
+  const c=trCtx,W=trW,g=trG;if(!c||!g)return;
+  c.clearRect(0,0,W,W);
+  /* notebook guide lines */
+  c.save();c.strokeStyle="rgba(182,175,212,.16)";c.lineWidth=1;c.setLineDash([4,6]);
+  [g.box.y,g.box.y+g.box.h/2,g.box.y+g.box.h].forEach(y=>{c.beginPath();c.moveTo(W*.08,y);c.lineTo(W*.92,y);c.stroke()});c.restore();
+  const showGuide=TR.mode==="trace"||reveal;
+  if(showGuide){
+    c.save();c.font=FONT(g.px);
+    c.fillStyle=reveal==="ok"?"rgba(76,211,154,.16)":"rgba(255,255,255,.07)";c.fillText(g.l,g.x,g.y);
+    c.setLineDash([6,7]);c.lineWidth=2;c.strokeStyle=reveal==="ok"?"rgba(76,211,154,.8)":"rgba(233,196,106,.7)";c.strokeText(g.l,g.x,g.y);c.restore();
+  }
+  c.save();c.strokeStyle="#F5D98E";c.shadowColor="rgba(233,196,106,.75)";c.shadowBlur=12;
+  trInk(c,W,TR.strokes,null,W*.072);c.restore();
+}
+function trCheck(){
+  const fb=$("fb"),cur=trList(TR.set)[TR.i],listen=TR.mode==="listen";
+  if(!TR.strokes.length){fb.className="feedback no";fb.textContent="முதலில் எழுது! Write the letter first";return}
+  const N=96,k=N/trW,g=trG;
+  const mk=()=>{const cv=document.createElement("canvas");cv.width=cv.height=N;return cv.getContext("2d",{willReadFrequently:true})};
+  const mask=mk(),tol=mk(),ink=mk();
+  mask.font=FONT(g.px*k);mask.fillStyle="#fff";mask.fillText(g.l,g.x*k,g.y*k);
+  tol.font=FONT(g.px*k);tol.fillStyle=tol.strokeStyle="#fff";tol.lineWidth=N*(listen?.09:.07);tol.lineJoin="round";tol.fillText(g.l,g.x*k,g.y*k);tol.strokeText(g.l,g.x*k,g.y*k);
+  ink.strokeStyle="#fff";
+  let map=p=>({x:p.x*k,y:p.y*k}),lw=trW*.072*k;
+  if(listen){ /* free writing: stretch the child's letter onto the guide box before comparing */
+    let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;TR.strokes.flat().forEach(p=>{x0=Math.min(x0,p.x);y0=Math.min(y0,p.y);x1=Math.max(x1,p.x);y1=Math.max(y1,p.y)});
+    const iw=Math.max(x1-x0,8),ih=Math.max(y1-y0,8),b=g.box,sx=b.w/iw,sy=b.h/ih;
+    map=p=>({x:(b.x+(p.x-x0)*sx)*k,y:(b.y+(p.y-y0)*sy)*k});lw=trW*.072*k*Math.min(1.4,Math.max(.6,(sx+sy)/2));
+  }
+  trInk(ink,N,TR.strokes,map,lw);
+  const A=mask.getImageData(0,0,N,N).data,T=tol.getImageData(0,0,N,N).data,I=ink.getImageData(0,0,N,N).data;
+  let Lc=0,hit=0,inkC=0,out=0;
+  for(let i=3;i<A.length;i+=4){const m=A[i]>110,t=T[i]>40,n=I[i]>60;if(m){Lc++;if(n)hit++}if(n){inkC++;if(!t)out++}}
+  const cov=hit/Math.max(Lc,1),off=out/Math.max(inkC,1);
+  const need=listen?{c:.45,o:.4}:{c:.55,o:.3};
+  if(cov>=need.c&&off<=need.o){
+    const st=listen?(cov>=.68&&off<=.22?3:cov>=.56&&off<=.3?2:1):(cov>=.8&&off<=.15?3:cov>=.68&&off<=.22?2:1);
+    TR.done=true;
+    if(!seen.trace.has(trKey())){seen.trace.add(trKey());store.set("kk_seen_trace",[...seen.trace])}
+    addStars(st);yay();starBurst(8+st*8);if(st===3)claps(1.4);
+    trDraw(listen?"ok":null);
+    fb.className="feedback ok";fb.innerHTML=`<div class="tstars">${"★".repeat(st)}<s>${"★".repeat(3-st)}</s></div>${["நன்று!","சூப்பர்!","அருமை!"][st-1]} ${listen?`That was ${cur.l} · “${cur.r}”`:["Good!","Super!","Perfect!"][st-1]}`;
+    $("chk").textContent="அடுத்து →";
+    if(!listen){const ch=$("tc").querySelector(`[data-i="${TR.i}"]`);ch&&ch.classList.add("done")}
+    speak(cur.l,cur.r);
+  }else{
+    TR.fails++;oops();
+    const incomplete=cov<need.c&&off<=need.o;
+    fb.className="feedback no";
+    fb.textContent=incomplete?"இன்னும் கொஞ்சம் எழுது! Cover the whole letter":(listen?"மீண்டும் முயற்சி! Try again":"கோட்டின் மேல் எழுது! Stay on the dotted lines");
+    if(listen&&TR.fails>=2){trDraw("hint");fb.textContent+=` · Hint: ${cur.l}`;speak(cur.l,cur.r)}
+  }
+}
+function trNext(){
+  const L=trList(TR.set);
+  if(TR.mode==="listen"){let n;do{n=Math.random()*L.length|0}while(n===TR.i&&L.length>1);TR.i=n}
+  else TR.i=(TR.i+1)%L.length;
+  trRender();
 }
 
 /* ---------- PLAY ---------- */

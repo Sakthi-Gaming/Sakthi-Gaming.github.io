@@ -1,0 +1,19 @@
+{
+  "name": "கற்போம் கற்பிப்போம் · Karpom Karpippom",
+  "short_name": "கற்போம்",
+  "description": "Learn Tamil letters with Milo the rabbit: uyir, mei, uyirmei and pazhamozhi games for kids.",
+  "id": "/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#110E24",
+  "theme_color": "#110E24",
+  "lang": "ta",
+  "categories": ["education", "kids", "games"],
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

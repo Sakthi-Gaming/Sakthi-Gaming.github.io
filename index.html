@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#110E24">
+<meta name="description" content="Learn Tamil letters with Milo the rabbit: uyir, mei, uyirmei and pazhamozhi games for kids.">
+<meta property="og:title" content="கற்போம் கற்பிப்போம் · Karpom Karpippom">
+<meta property="og:description" content="Learn Tamil letters with Milo the rabbit.">
+<meta property="og:image" content="store/feature-graphic-1024x500.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Karpom Karpippom</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arima:wght@500;600;700&family=Catamaran:wght@400;600;800&display=swap">
+<style>
+/* Layout: one-column phone-first "night palace" — midnight ground with a faint kolam dot lattice, jewel-tone tiles, gold leaf for every reward. Deliberately single dark theme. */
+:root{
+  color-scheme: dark;
+  --night:#110E24;
+  --surface:#1E1A3D;
+  --surface-2:#29234F;
+  --glass:rgba(255,255,255,.055);
+  --hair:rgba(255,255,255,.12);
+  --line:rgba(233,196,106,.30);
+  --ivory:#FBF5E9;
+  --mist:#B6AFD4;
+  --gold:#E9C46A;
+  --gold-2:#FFF0C2;
+  --gold-deep:#A87A2A;
+  /* jewel tones (names kept for the game logic) */
+  --coral:#C8456E;  /* ruby */
+  --teal:#17977F;   /* emerald */
+  --grape:#5458D6;  /* sapphire */
+  --leaf:#9259D4;   /* amethyst */
+  --sun:var(--gold);
+  --paper:var(--surface-2);
+  --ink:#07050F;
+  --shadow:rgba(255,255,255,.14);
+  --good:#4CD39A;
+  --oops:#F2777F;
+  --goldfill:linear-gradient(115deg,var(--gold-deep) 0%,var(--gold) 28%,var(--gold-2) 50%,var(--gold) 70%,var(--gold-deep) 100%);
+  --display:"Arima","Noto Sans Tamil","Latha",Georgia,serif;
+  --body:"Catamaran","Noto Sans Tamil",system-ui,sans-serif;
+}
+html,body{height:100%}
+body{background:var(--night);color:var(--ivory);font-family:var(--body);font-size:16px;overflow-x:hidden;
+  background-image:radial-gradient(rgba(233,196,106,.09) 1.1px,transparent 1.3px);background-size:26px 26px}
+body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;filter:blur(70px);pointer-events:none}
+body::before{width:420px;height:420px;left:-160px;top:-140px;background:radial-gradient(circle,rgba(146,89,212,.45),transparent 70%)}
+body::after{width:380px;height:380px;right:-170px;bottom:-120px;background:radial-gradient(circle,rgba(233,196,106,.22),transparent 70%)}
+.wrap{position:relative;max-width:560px;margin:0 auto;padding-inline:16px;padding-block:16px 36px;display:flex;flex-direction:column;gap:18px}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.col{display:flex;flex-direction:column;gap:18px;animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.gold{background:var(--goldfill);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* header */
+header{display:flex;align-items:center;gap:12px}
+.milo{flex:none;width:54px;height:54px;border-radius:50%;padding:0;border:0;display:grid;place-items:center;font-size:30px;line-height:1;
+  background:radial-gradient(circle at 35% 30%,var(--surface-2),var(--night));box-shadow:0 0 0 1.5px var(--gold),0 0 0 5px rgba(233,196,106,.12),0 10px 24px -8px rgba(0,0,0,.7)}
+.milo span{display:block;animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-5deg)}}
+.milo.talk span{animation:talk .28s ease-in-out infinite}
+@keyframes talk{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.14,.9) rotate(6deg)}}
+.htxt{flex:1;min-width:0}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(23px,6.6vw,31px);line-height:1.1;margin:0;text-wrap:balance}
+h1 .gold{animation:shimmer 6s ease-in-out infinite}
+@keyframes shimmer{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.sub{margin:3px 0 0;color:var(--mist);font-size:10.5px;letter-spacing:.14em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;font-weight:600}
+.stars{flex:none;font-family:var(--display);font-weight:700;font-size:17px;padding:6px 14px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums;
+  background:var(--glass);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.stars::first-letter{color:var(--gold)}
+
+/* home modules */
+.mods{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mod{--c:var(--coral);position:relative;overflow:hidden;text-align:left;border-radius:26px;padding:10px 10px 14px;display:flex;flex-direction:column;gap:3px;min-width:0;
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--hair);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 24px 40px -24px rgba(0,0,0,.8);transition:transform .18s,border-color .18s}
+.mod:hover{border-color:var(--line)}
+.mod:active{transform:scale(.97)}
+.mod .glyph{position:relative;height:92px;border-radius:18px;display:grid;place-items:center;margin-bottom:10px;white-space:nowrap;
+  font-family:var(--display);font-weight:700;font-size:38px;color:var(--ivory);text-shadow:0 2px 12px rgba(0,0,0,.35);
+  background:radial-gradient(120% 90% at 30% 15%,color-mix(in srgb,var(--c) 70%,white 30%),var(--c) 45%,color-mix(in srgb,var(--c) 55%,black) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -12px 24px rgba(0,0,0,.18)}
+.mod .glyph::after{content:"";position:absolute;inset:7px;border-radius:13px;border:1px solid rgba(255,255,255,.22)}
+.mod b{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.15;padding-inline:4px}
+.mod small{color:var(--mist);font-size:13px;line-height:1.3;padding-inline:4px}
+.bar{height:4px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 4px 0}
+.bar i{display:block;height:100%;background:var(--goldfill);border-radius:99px}
+
+/* module top */
+.modtop{display:flex;align-items:center;gap:12px}
+.modtop h2{flex:1;min-width:0;margin:0;font-family:var(--display);font-weight:700;font-size:24px;line-height:1.15}
+.modtop h2 small{display:block;font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);margin-top:2px}
+
+/* segmented tabs */
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:5px;border-radius:999px;background:var(--glass);border:1px solid var(--hair)}
+.tab{border:0;background:transparent;border-radius:999px;padding:8px 6px;display:flex;flex-direction:column;align-items:center;line-height:1.15;color:var(--mist);transition:background .2s,color .2s}
+.tab b{font-family:var(--display);font-size:18px;font-weight:700}
+.tab small{font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;opacity:.8}
+.tab[aria-selected="true"]{background:var(--goldfill);color:var(--night);box-shadow:0 6px 18px -6px rgba(233,196,106,.6)}
+
+/* Milo says */
+.bubble{position:relative;margin-left:18px;padding:12px 16px;border-radius:20px;font-size:15px;color:var(--mist);background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(8px)}
+.bubble::before{content:"";position:absolute;left:-7px;top:16px;width:12px;height:12px;background:var(--surface);border-left:1px solid var(--hair);border-bottom:1px solid var(--hair);transform:rotate(45deg)}
+.bubble .ta{font-family:var(--display);font-weight:700;font-size:18px;display:block;color:var(--ivory);margin-bottom:1px}
+
+/* tiles */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.grid.g3{grid-template-columns:repeat(3,1fr)}
+.tile{--c:var(--coral);position:relative;aspect-ratio:1;max-width:100%;min-width:0;border-radius:22px;padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.16);
+  background:radial-gradient(120% 100% at 30% 10%,color-mix(in srgb,var(--c) 72%,white 28%),var(--c) 50%,color-mix(in srgb,var(--c) 60%,black) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -10px 18px rgba(0,0,0,.16),0 14px 22px -14px color-mix(in srgb,var(--c) 70%,black);
+  transition:transform .15s}
+.tile:active{transform:scale(.94)}
+.tile .L{font-family:var(--display);font-weight:700;font-size:clamp(28px,9vw,42px);line-height:1.05;color:var(--ivory);text-shadow:0 2px 10px rgba(0,0,0,.28)}
+.tile .r{font-size:11px;font-weight:600;letter-spacing:.06em;color:rgba(251,245,233,.78);line-height:1.2}
+.tile.done::after{content:"✦";position:absolute;top:5px;right:8px;font-size:12px;color:var(--gold-2);text-shadow:0 0 8px var(--gold)}
+.tile.sel,.tile.right{background:var(--goldfill);border-color:rgba(255,240,194,.6);box-shadow:0 0 0 3px rgba(233,196,106,.18),0 16px 30px -12px rgba(233,196,106,.6)}
+.tile.sel .L,.tile.right .L,.tile.sel .r,.tile.right .r{color:var(--night);text-shadow:none}
+.grouph{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.grouph b{font-family:var(--display);font-weight:700;font-size:19px}
+.grouph span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mist)}
+
+/* chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-width:50px;height:50px;border-radius:16px;padding:0 10px;font-family:var(--display);font-weight:700;font-size:22px;background:var(--glass);border:1px solid var(--hair);transition:background .2s}
+.chip[aria-pressed="true"]{background:radial-gradient(120% 100% at 30% 10%,#3FC7AC,var(--teal) 55%,#0C5E50);border-color:rgba(255,255,255,.25);box-shadow:0 10px 20px -10px var(--teal)}
+
+/* hero card */
+.card{--c:var(--coral);position:relative;overflow:hidden;border-radius:30px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 40px 60px -36px rgba(0,0,0,.85)}
+.card::before{content:"";position:absolute;inset:-40% -20% auto;height:70%;background:radial-gradient(closest-side,color-mix(in srgb,var(--c) 45%,transparent),transparent);pointer-events:none}
+.card>*{position:relative}
+.card .big{font-family:var(--display);font-weight:700;font-size:clamp(88px,28vw,132px);line-height:1.25;color:var(--ivory);text-shadow:0 0 34px color-mix(in srgb,var(--c) 85%,transparent),0 6px 0 rgba(0,0,0,.25)}
+.card .pic{font-size:58px;line-height:1.15;filter:drop-shadow(0 10px 14px rgba(0,0,0,.4))}
+.card .word{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.2;text-wrap:balance}
+.card .word .first{background:var(--goldfill);-webkit-background-clip:text;background-clip:text;color:transparent}
+.en{color:var(--mist);font-size:15px}
+.pill{display:inline-block;border-radius:99px;padding:3px 14px;font-family:var(--display);font-weight:700;font-size:14px;color:var(--ivory);background:color-mix(in srgb,var(--c) 35%,transparent);border:1px solid color-mix(in srgb,var(--c) 70%,white 10%)}
+
+/* split equation */
+.eq{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:var(--display);font-weight:700}
+.eq .part{min-width:52px;padding:6px 10px;border-radius:18px;font-size:clamp(30px,9vw,42px);line-height:1.15;background:var(--glass);border:1px solid var(--hair);color:var(--ivory)}
+.eq .part.m{background:radial-gradient(120% 100% at 30% 10%,#3FC7AC,var(--teal) 55%,#0C5E50);border-color:rgba(255,255,255,.2)}
+.eq .part.u{background:radial-gradient(120% 100% at 30% 10%,#E8789A,var(--coral) 55%,#7A2141);border-color:rgba(255,255,255,.2)}
+.eq .part.res{background:var(--goldfill);color:var(--night);font-size:clamp(36px,11vw,54px);box-shadow:0 14px 30px -12px rgba(233,196,106,.6)}
+.eq .op{font-size:clamp(22px,6vw,30px);color:var(--gold)}
+.eq.small{gap:4px}
+.eq.small .part{font-size:18px;min-width:0;padding:1px 8px;border-radius:9px;box-shadow:none}
+.eq.small .op{font-size:14px}
+.umtile .r{font-size:10px}
+
+/* buttons */
+.row{display:flex;gap:8px;width:100%;justify-content:center;flex-wrap:wrap}
+.btn{border-radius:999px;padding:11px 16px;font-family:var(--display);font-weight:700;font-size:16px;color:var(--ivory);background:var(--glass);border:1px solid var(--hair);transition:transform .12s,border-color .2s}
+.btn:hover{border-color:var(--line)}
+.btn:active{transform:scale(.96)}
+.btn.main{background:var(--goldfill);color:var(--night);border-color:rgba(255,240,194,.55);box-shadow:0 12px 26px -12px rgba(233,196,106,.7)}
+.btn.sm{font-size:14px;padding:7px 14px}
+.btn[disabled]{opacity:.35}
+
+/* proverbs */
+.prov{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:22px;background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--hair)}
+.prov .pic{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:var(--glass);border:1px solid var(--hair)}
+.prov .t{flex:1;min-width:0}
+.prov .t b{display:block;font-family:var(--display);font-weight:700;font-size:20px;line-height:1.3}
+.prov .t i{display:block;font-style:italic;font-size:13px;color:var(--gold);margin-top:2px}
+.prov .t span{display:block;font-size:15px;color:var(--mist);margin-top:5px;line-height:1.45}
+.prov.done{border-color:var(--line)}
+
+/* play */
+.prog{display:flex;gap:7px;justify-content:center;align-items:center}
+.prog i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .25s}
+.prog i.ok{background:var(--good);box-shadow:0 0 8px var(--good)}
+.prog i.now{width:24px;border-radius:99px;background:var(--goldfill)}
+.q{display:flex;align-items:center;gap:14px;padding:16px;border-radius:26px;background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--line)}
+.q .qpic{flex:none;font-size:44px;line-height:1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))}
+.q .qt{flex:1;min-width:0}
+.q .qt b{display:block;font-family:var(--display);font-weight:700;font-size:21px;line-height:1.3;text-wrap:balance}
+.q .qt span{color:var(--mist);font-size:14px}
+.q .qeq{margin:2px 0 6px;justify-content:flex-start}
+.blank{display:inline-block;min-width:3em;border-bottom:2px dashed var(--gold)}
+.say{flex:none;width:54px;height:54px;border-radius:50%;border:0;display:grid;place-items:center;font-size:22px;background:var(--goldfill);box-shadow:0 0 0 5px rgba(233,196,106,.14),0 12px 24px -10px rgba(233,196,106,.7);transition:transform .12s}
+.say:active{transform:scale(.92)}
+.prov .say{width:44px;height:44px;font-size:18px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opts.words{grid-template-columns:1fr}
+.opt{aspect-ratio:1.25}
+.opt .L{font-size:clamp(46px,15vw,68px)}
+.opts.words .opt{aspect-ratio:auto;padding:14px;background:var(--glass)!important;border-color:var(--hair)}
+.opts.words .opt.right{background:var(--goldfill)!important}
+.opts.words .opt .L{font-size:22px}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.pop{animation:pop .45s}
+@keyframes pop{40%{transform:scale(1.12)}}
+.opt.wrong{filter:grayscale(.9) brightness(.6)}
+.feedback{text-align:center;font-family:var(--display);font-weight:700;font-size:20px;min-height:30px}
+.feedback.ok{color:var(--good)} .feedback.no{color:var(--oops)}
+.feedback .en{font-family:var(--body);font-weight:400;margin-top:4px}
+
+.note{font-size:13px;color:var(--mist);text-align:center;text-wrap:balance}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;padding:14px 16px;border-radius:22px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--mist);z-index:10;
+  background:rgba(30,26,61,.92);backdrop-filter:blur(12px);border:1px solid var(--line);box-shadow:0 20px 40px -10px rgba(0,0,0,.7)}
+.toast b{font-family:var(--display);font-size:18px;color:var(--ivory)}
+.toast .btn{align-self:flex-end}
+
+/* celebration */
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:6}
+.confetti i{position:absolute;top:-24px;font-style:normal;font-size:20px;color:var(--gold);text-shadow:0 0 10px rgba(233,196,106,.8);animation:fall 1.8s linear forwards}
+.confetti i:nth-child(3n){color:var(--gold-2)} .confetti i:nth-child(4n){color:#E8789A} .confetti i:nth-child(5n){color:#8FA2FF}
+@keyframes fall{to{transform:translateY(110vh) rotate(380deg)}}
+.burst{position:fixed;left:50%;top:40%;font-style:normal;color:var(--gold);text-shadow:0 0 14px var(--gold);pointer-events:none;z-index:7;animation:burst 1.5s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(.2)}70%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.3) rotate(240deg);opacity:0}}
+.endstars{display:flex;gap:6px;justify-content:center;font-family:var(--display);font-weight:700;font-size:42px}
+.endstars i{font-style:normal;color:rgba(255,255,255,.12);transform:scale(.7);transition:transform .3s,color .3s}
+.endstars i.on{color:var(--gold);text-shadow:0 0 18px rgba(233,196,106,.85);transform:scale(1);animation:pop .45s}
+.trophy{font-size:84px;line-height:1;filter:drop-shadow(0 0 26px rgba(233,196,106,.6));animation:pop .6s,bob 2.4s ease-in-out .6s infinite}
+.clapline{font-size:22px;letter-spacing:.2em}
+.endmilo{font-size:76px;line-height:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <button class="milo" id="home" aria-label="Home"><span>🐰</span></button>
+    <div class="htxt">
+      <h1>கற்போம் <span class="gold">கற்பிப்போம்</span></h1>
+      <p class="sub">Tamil with Milo</p>
+    </div>
+    <div class="stars" id="stars" aria-label="Stars collected">★ 0</div>
+  </header>
+  <main id="view"></main>
+  <p class="note" id="voiceNote"></p>
+</div>
+<div class="toast" id="toast" role="status" hidden><b>🔇 சத்தம் வரவில்லையா?</b>Phone silent mode off pannunga, volume yethunga. Phone-oda Text-to-speech settings-la Google voice on-a irukka-nu paarunga.<button class="btn sm" id="toastX">சரி</button></div>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<script>
+const COLORS=["var(--coral)","var(--teal)","var(--grape)","var(--leaf)"];
+
+/* ---------- DATA ---------- */
+const UYIR=[
+ {l:"அ",r:"a",  w:"அம்மா",   p:"👩",en:"Amma · Mother"},
+ {l:"ஆ",r:"aa", w:"ஆடு",     p:"🐐",en:"Aadu · Goat"},
+ {l:"இ",r:"i",  w:"இலை",     p:"🍃",en:"Ilai · Leaf"},
+ {l:"ஈ",r:"ii", w:"ஈ",       p:"🪰",en:"Ee · Housefly"},
+ {l:"உ",r:"u",  w:"உலகம்",   p:"🌍",en:"Ulagam · World"},
+ {l:"ஊ",r:"uu", w:"ஊசி",     p:"🪡",en:"Oosi · Needle"},
+ {l:"எ",r:"e",  w:"எலி",     p:"🐭",en:"Eli · Mouse"},
+ {l:"ஏ",r:"ee", w:"ஏணி",     p:"🪜",en:"Eni · Ladder"},
+ {l:"ஐ",r:"ai", w:"ஐந்து",   p:"🖐️",en:"Ainthu · Five"},
+ {l:"ஒ",r:"o",  w:"ஒட்டகம்", p:"🐫",en:"Ottagam · Camel"},
+ {l:"ஓ",r:"oo", w:"ஓநாய்",   p:"🐺",en:"Oonaai · Wolf"},
+ {l:"ஔ",r:"au", w:"ஔவையார்", p:"👵",en:"Avvaiyar · Tamil poet"}
+];
+UYIR.forEach((x,i)=>x.c=COLORS[i%4]);
+const SIGNS=["","ா","ி","ீ","ு","ூ","ெ","ே","ை","ொ","ோ","ௌ"];
+const PULLI="்";
+const GROUPS={v:{ta:"வல்லினம்",en:"Hard sounds",c:"var(--coral)"},m:{ta:"மெல்லினம்",en:"Soft sounds",c:"var(--teal)"},i:{ta:"இடையினம்",en:"Middle sounds",c:"var(--grape)"}};
+const MEI=[["க","k","v"],["ங","ng","m"],["ச","ch","v"],["ஞ","nj","m"],["ட","ṭ","v"],["ண","ṇ","m"],["த","th","v"],["ந","n","m"],["ப","p","v"],["ம","m","m"],["ய","y","i"],["ர","r","i"],["ல","l","i"],["வ","v","i"],["ழ","zh","i"],["ள","ḷ","i"],["ற","ṟ","v"],["ன","ṉ","m"]]
+  .map(([b,r,g])=>({b,l:b+PULLI,r,g}));
+const um=(m,u)=>MEI[m].b+SIGNS[u];
+const umr=(m,u)=>MEI[m].r+UYIR[u].r;
+const PAZ=[
+ {t:"சிறு துளி பெரு வெள்ளம்",r:"Siru thuli peru vellam",en:"Small drops together make a big flood. Little efforts add up.",p:"💧"},
+ {t:"ஒற்றுமையே பலம்",r:"Otrumaiye balam",en:"Unity is strength.",p:"🤝"},
+ {t:"இளமையில் கல்",r:"Ilamaiyil kal",en:"Learn while you are young.",p:"📚"},
+ {t:"காலம் பொன் போன்றது",r:"Kaalam pon pondradhu",en:"Time is precious, like gold.",p:"⏳"},
+ {t:"முயற்சி திருவினை ஆக்கும்",r:"Muyarchi thiruvinai aakkum",en:"Hard work brings success.",p:"💪"},
+ {t:"யானைக்கும் அடி சறுக்கும்",r:"Yaanaikkum adi sarukkum",en:"Even an elephant can slip. Anyone can make a mistake.",p:"🐘"},
+ {t:"எறும்பு ஊரக் கல்லும் தேயும்",r:"Erumbu oorak kallum theyum",en:"Even a stone wears away when ants walk on it. Keep trying!",p:"🐜"},
+ {t:"நிறைகுடம் தளும்பாது",r:"Niraikudam thalumbaadhu",en:"A full pot does not splash. Wise people don't show off.",p:"🏺"},
+ {t:"மின்னுவதெல்லாம் பொன்னல்ல",r:"Minnuvadhellaam ponnalla",en:"All that glitters is not gold.",p:"✨"},
+ {t:"ஆழம் தெரியாமல் காலை விடாதே",r:"Aazham theriyaamal kaalai vidaadhe",en:"Don't step in without knowing how deep it is. Think before you act.",p:"🌊"},
+ {t:"அகத்தின் அழகு முகத்தில் தெரியும்",r:"Agaththin azhagu mugaththil theriyum",en:"A kind heart shows on your face.",p:"😊"},
+ {t:"கற்றது கைமண் அளவு கல்லாதது உலகளவு",r:"Katradhu kaiman alavu, kallaadhadhu ulagalavu",en:"What we know is a handful of sand; what we don't know is as big as the world.",p:"🌏"}
+];
+PAZ.forEach((x,i)=>x.c=COLORS[i%4]);
+
+/* ---------- storage ---------- */
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+             set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let stars=store.get("kk_stars",0);
+const seen={}; ["uyir","mei","uyirmei","paz"].forEach(k=>seen[k]=new Set(store.get("kk_seen_"+k,[])));
+function markSeen(mod,key){if(seen[mod].has(key))return;seen[mod].add(key);store.set("kk_seen_"+mod,[...seen[mod]]);addStars(1);tone([660,880])}
+const starsEl=document.getElementById("stars");
+function addStars(n){stars+=n;store.set("kk_stars",stars);starsEl.textContent="★ "+stars;starsEl.classList.remove("pop");void starsEl.offsetWidth;starsEl.classList.add("pop")}
+starsEl.textContent="★ "+stars;
+
+const $=id=>document.getElementById(id);
+
+/* ---------- voice + sound ---------- */
+let taVoice=null,enVoice=null;
+function pickVoice(){const vs=speechSynthesis?.getVoices?.()||[];taVoice=vs.find(v=>/^ta/i.test(v.lang))||null;
+  enVoice=vs.find(v=>/en[-_]IN/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;
+  $("voiceNote").textContent=taVoice?"":"இந்த phone-ல் Tamil voice இல்லை, அதனால் Milo English எழுத்தில் படிக்கும். Real Tamil sound-க்கு: Settings → Text-to-speech → Google → Tamil voice install பண்ணுங்க.";}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+else $("voiceNote").textContent="This browser can't speak. Ask a grown-up to read along!";
+const plain=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"");
+let lastHelp=0;
+function soundHelp(){if(Date.now()-lastHelp<15000)return;lastHelp=Date.now();const t=$("toast");t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,7000)}
+function speak(ta,en){
+  if(!("speechSynthesis" in window)){soundHelp();return}
+  try{
+    if(!taVoice&&!enVoice)pickVoice();
+    const useTa=!!taVoice||!en;
+    const u=new SpeechSynthesisUtterance(useTa?ta:plain(en));
+    u.lang=useTa?"ta-IN":(enVoice?enVoice.lang:"en-IN");
+    const v=useTa?taVoice:enVoice;if(v)u.voice=v;
+    u.rate=useTa?.88:.82;u.pitch=1.95;u.volume=1;
+    let started=false;u.onstart=()=>{started=true;$("toast").hidden=true;$("home").classList.add("talk")};u.onend=()=>$("home").classList.remove("talk");
+    u.onerror=e=>{$("home").classList.remove("talk");if(e.error!=="interrupted"&&e.error!=="canceled")soundHelp()};
+    speechSynthesis.cancel();
+    tone([1400,1900],.05);setTimeout(()=>{try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){soundHelp()}},90);
+    setTimeout(()=>{if(!started&&!speechSynthesis.speaking)soundHelp()},2600);
+  }catch(e){soundHelp()}
+}
+let ac=null;
+function tone(fs,dur=.12){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();let t=ac.currentTime;
+  fs.forEach(f=>{const o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+dur*1.6);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur*1.6);t+=dur*.8})}catch(e){}}
+const yay=()=>tone([784,988,1175,1568]);const oops=()=>tone([300,220],.18);
+function confetti(n=24){const c=$("confetti");const bits=["★","✦","✧","◆"];
+  for(let i=0;i<n;i++){const s=document.createElement("i");s.textContent=bits[i%4];s.style.left=Math.random()*100+"vw";s.style.fontSize=(14+Math.random()*16)+"px";s.style.animationDelay=Math.random()*.6+"s";c.appendChild(s);setTimeout(()=>s.remove(),2600)}}
+function claps(sec=2.6){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const sr=ac.sampleRate;
+  const buf=ac.createBuffer(1,sr*.08,sr),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
+  const t0=ac.currentTime+.05;
+  for(let k=0;k<70;k++){const t=t0+Math.random()*sec*(k<50?.8:1);const src=ac.createBufferSource();src.buffer=buf;
+    const f=ac.createBiquadFilter();f.type="bandpass";f.frequency.value=900+Math.random()*1500;f.Q.value=1.2;
+    const g=ac.createGain();g.gain.value=.25+Math.random()*.35;src.connect(f).connect(g).connect(ac.destination);src.start(t)}}catch(e){}}
+function starBurst(n=28){for(let i=0;i<n;i++){const s=document.createElement("i");s.className="burst";s.textContent=i%3?"★":"✦";
+  const a=Math.random()*Math.PI*2,r=120+Math.random()*220;s.style.setProperty("--dx",Math.cos(a)*r+"px");s.style.setProperty("--dy",Math.sin(a)*r+"px");
+  s.style.animationDelay=(Math.random()*.4)+"s";s.style.fontSize=(20+Math.random()*28)+"px";document.body.appendChild(s);setTimeout(()=>s.remove(),2300)}}
+
+const view=$("view");
+const h=html=>{view.innerHTML=html;window.scrollTo({top:0})};
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pickOthers=(n,ex,k)=>shuffle([...Array(n).keys()].filter(i=>i!==ex)).slice(0,k);
+
+/* ---------- MODULES ---------- */
+const MODS={
+ uyir:{ta:"உயிர் எழுத்து",en:"Vowels · 12 letters",glyph:"அ ஆ",c:"var(--coral)",total:12},
+ mei:{ta:"மெய் எழுத்து",en:"Consonants · 18 letters",glyph:"க் ங்",c:"var(--teal)",total:18},
+ uyirmei:{ta:"உயிர்மெய் எழுத்து",en:"Letter maker · 216 letters",glyph:"க்+அ",c:"var(--grape)",total:216},
+ paz:{ta:"பழமொழி",en:"Proverbs · "+PAZ.length+" sayings",glyph:"💬",c:"var(--leaf)",total:PAZ.length}
+};
+
+function home(){
+  h(`<div class="col">
+    <div class="bubble"><span class="ta">இன்று என்ன கற்போம்?</span>What shall we learn today? Pick one!</div>
+    <div class="mods">${Object.entries(MODS).map(([k,m])=>{const pct=Math.round(seen[k].size/m.total*100);return `
+      <button class="mod" style="--c:${m.c}" data-k="${k}">
+        <div class="glyph" aria-hidden="true">${m.glyph}</div>
+        <b>${m.ta}</b><small>${m.en}</small>
+        <div class="bar" aria-label="${pct}% explored"><i style="width:${Math.max(pct,2)}%"></i></div>
+      </button>`}).join("")}</div>
+  </div>`);
+  view.querySelectorAll(".mod").forEach(b=>b.onclick=()=>openMod(b.dataset.k,"learn"));
+}
+
+function openMod(k,tab){
+  const m=MODS[k];
+  h(`<div class="col">
+    <div class="modtop"><button class="btn sm" id="bk">← முகப்பு</button><h2>${m.ta}<small>${m.en}</small></h2></div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tL" aria-selected="${tab==="learn"}"><b>கற்போம்</b><small>Learn</small></button>
+      <button class="tab" role="tab" id="tP" aria-selected="${tab==="play"}"><b>விளையாடுவோம்</b><small>Play</small></button>
+    </div>
+    <div id="body"></div>
+  </div>`);
+  $("bk").onclick=home;$("tL").onclick=()=>openMod(k,"learn");$("tP").onclick=()=>openMod(k,"play");
+  tab==="learn"?LEARN[k]():newGame(k);
+}
+const body=html=>{$("body").innerHTML=html};
+
+/* ---------- LEARN ---------- */
+const LEARN={
+ uyir(){
+  body(`<div class="col"><div class="bubble"><span class="ta">எழுத்தைத் தொடு!</span>Tap a letter to hear it and see a word.</div>
+    <div class="grid">${UYIR.map((x,i)=>`<button class="tile ${seen.uyir.has(i)?"done":""}" style="--c:${x.c}" data-i="${i}" aria-label="${x.l} ${x.r}"><span class="L">${x.l}</span><span class="r">${x.r}</span></button>`).join("")}</div></div>`);
+  $("body").querySelectorAll(".tile").forEach(b=>b.onclick=()=>uyirCard(+b.dataset.i));
+ },
+ mei(){
+  body(`<div class="col"><div class="bubble"><span class="ta">மெய் எழுத்துக்கு மேல் புள்ளி!</span>Consonants wear a dot on top (புள்ளி). They come in 3 families.</div>
+    ${Object.entries(GROUPS).map(([g,G])=>`
+      <div class="grouph"><b>${G.ta}</b><span>${G.en}</span></div>
+      <div class="grid g3">${MEI.map((x,i)=>x.g!==g?"":`<button class="tile ${seen.mei.has(i)?"done":""}" style="--c:${G.c}" data-i="${i}" aria-label="${x.l} ${x.r}"><span class="L">${x.l}</span><span class="r">${x.r}</span></button>`).join("")}</div>`).join("")}
+  </div>`);
+  $("body").querySelectorAll(".tile").forEach(b=>b.onclick=()=>meiCard(+b.dataset.i));
+ },
+ uyirmei(){umBuilder(0,0)},
+ paz(){
+  body(`<div class="col"><div class="bubble"><span class="ta">பாட்டி சொன்ன பழமொழி!</span>Wise sayings from Paati. Tap 🔊 to hear one.</div>
+   ${PAZ.map((x,i)=>`<div class="prov ${seen.paz.has(i)?"done":""}"><div class="pic" aria-hidden="true">${x.p}</div>
+     <div class="t"><b>${x.t}</b><i>${x.r}</i><span>${x.en}</span></div>
+     <button class="say" data-i="${i}" aria-label="Hear proverb">🔊</button></div>`).join("")}</div>`);
+  $("body").querySelectorAll(".say").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;speak(PAZ[i].t,PAZ[i].r);markSeen("paz",i);b.closest(".prov").classList.add("done")});
+ }
+};
+
+function uyirCard(i){
+  const x=UYIR[i];markSeen("uyir",i);
+  body(`<div class="col">
+    <div class="card" style="--c:${x.c}">
+      <div class="big pop">${x.l}</div><div class="en">sounds like “${x.r}”</div>
+      <div class="pic" aria-hidden="true">${x.p}</div>
+      <div class="word"><span class="first">${x.l}</span>${x.w.slice(x.l.length)}</div>
+      <div class="en">${x.en}</div>
+      <button class="btn main" id="sp" style="margin-top:10px">🔊 கேள் · Hear</button>
+    </div>
+    <div class="row"><button class="btn" id="all">▦ எல்லாம்</button><button class="btn" id="pv" ${i===0?"disabled":""}>← முன்</button><button class="btn" id="nx">${i===UYIR.length-1?"விளையாடு! →":"அடுத்து →"}</button></div>
+  </div>`);
+  const say=()=>speak(`${x.l}. ${x.w}`,`${x.r}. ${x.en.split(" · ")[0]}`);say();
+  $("sp").onclick=say;$("all").onclick=LEARN.uyir;
+  $("pv").onclick=()=>i>0&&uyirCard(i-1);
+  $("nx").onclick=()=>i<UYIR.length-1?uyirCard(i+1):openMod("uyir","play");
+}
+function meiCard(i){
+  const x=MEI[i],G=GROUPS[x.g];markSeen("mei",i);
+  body(`<div class="col">
+    <div class="card" style="--c:${G.c}">
+      <div class="big pop">${x.l}</div><div class="en">sound “${x.r}” with no vowel</div>
+      <span class="pill">${G.ta} · ${G.en}</span>
+      <div class="en" style="margin-top:10px">Add அ and the dot goes away:</div>
+      <div class="eq"><span class="part m">${x.l}</span><span class="op">+</span><span class="part u">அ</span><span class="op">=</span><span class="part res">${x.b}</span></div>
+      <button class="btn main" id="sp" style="margin-top:12px">🔊 கேள் · Hear</button>
+    </div>
+    <div class="row"><button class="btn" id="all">▦ எல்லாம்</button><button class="btn" id="pv" ${i===0?"disabled":""}>← முன்</button><button class="btn" id="nx">${i===MEI.length-1?"விளையாடு! →":"அடுத்து →"}</button></div>
+  </div>`);
+  const say=()=>speak(`${x.l}. ${x.b}`,`${x.r}. ${x.r}a`);say();
+  $("sp").onclick=say;$("all").onclick=LEARN.mei;
+  $("pv").onclick=()=>i>0&&meiCard(i-1);
+  $("nx").onclick=()=>i<MEI.length-1?meiCard(i+1):openMod("mei","play");
+}
+function umBuilder(m,u){
+  markSeen("uyirmei",m*12+u);
+  const res=um(m,u);
+  body(`<div class="col">
+    <div class="bubble"><span class="ta">மெய் + உயிர் = உயிர்மெய்</span>Pick a consonant and a vowel. Watch them join into a new letter!</div>
+    <div class="card" style="--c:var(--grape)">
+      <div class="eq pop"><span class="part m">${MEI[m].l}</span><span class="op">+</span><span class="part u">${UYIR[u].l}</span><span class="op">=</span><span class="part res">${res}</span></div>
+      <div class="en" style="margin-top:6px">${MEI[m].r} + ${UYIR[u].r} = <b style="color:var(--gold)">${umr(m,u)}</b></div>
+      <button class="btn main" id="sp" style="margin-top:8px">🔊 கேள் · Hear</button>
+    </div>
+    <div class="grouph"><b>1. மெய்</b><span>Pick a consonant</span></div>
+    <div class="chips" id="mc">${MEI.map((x,i)=>`<button class="chip" aria-pressed="${i===m}" data-i="${i}">${x.l}</button>`).join("")}</div>
+    <div class="grouph"><b>2. உயிர்</b><span>All 12 with ${MEI[m].l} · tap one</span></div>
+    <div class="grid">${UYIR.map((x,i)=>`<button class="tile umtile ${i===u?"sel":""}" style="--c:${x.c}" data-i="${i}" aria-label="${um(m,i)}"><span class="L">${um(m,i)}</span><span class="r">${MEI[m].l}+${x.l}</span></button>`).join("")}</div>
+  </div>`);
+  const say=()=>speak(`${MEI[m].l}. ${UYIR[u].l}. ${res}`,`${MEI[m].r}, plus ${UYIR[u].r}, makes ${umr(m,u)}`);say();
+  $("sp").onclick=say;
+  $("mc").querySelectorAll(".chip").forEach(b=>b.onclick=()=>umBuilder(+b.dataset.i,u));
+  $("body").querySelectorAll(".umtile").forEach(b=>b.onclick=()=>umBuilder(m,+b.dataset.i));
+  const sel=$("mc").querySelector('[aria-pressed="true"]');sel&&sel.scrollIntoView({block:"nearest",inline:"center"});
+}
+
+/* ---------- PLAY ---------- */
+const GEN={
+ uyir(r,a){
+  const x=UYIR[a],opts=shuffle([a,...pickOthers(12,a,3)]);
+  return r%2
+   ?{icon:x.p,title:"இது எந்த எழுத்தில் தொடங்குகிறது?",sub:`${x.en.split(" · ")[1]} starts with which letter?`,say:x.w,sayEn:x.en.split(" · ")[0],afterEn:`${x.r}. ${x.en.split(" · ")[0]}`,
+     opts:opts.map(i=>({L:UYIR[i].l,c:UYIR[i].c})),ans:opts.indexOf(a),after:`${x.l}. ${x.w}`}
+   :{icon:"👂",title:`“${x.r}” எங்கே?`,sub:`Find the letter that says “${x.r}”`,say:x.l,sayEn:x.r,afterEn:`${x.r}. ${x.en.split(" · ")[0]}`,
+     opts:opts.map(i=>({L:UYIR[i].l,c:UYIR[i].c})),ans:opts.indexOf(a),after:`${x.l}. ${x.w}`};
+ },
+ mei(r,a){
+  const x=MEI[a];
+  if(r%3===2){const gs=Object.keys(GROUPS);return{icon:"👨‍👩‍👧",title:`${x.l} எந்தக் குடும்பம்?`,sub:"Which family does this letter belong to?",say:x.l,sayEn:x.r,afterEn:x.r,words:true,
+    opts:gs.map(g=>({L:GROUPS[g].ta+" · "+GROUPS[g].en,c:GROUPS[g].c})),ans:gs.indexOf(x.g),after:`${x.l}. ${GROUPS[x.g].ta}`}}
+  const opts=shuffle([a,...pickOthers(18,a,3)]);
+  return{icon:"👂",title:`“${x.r}” எங்கே?`,sub:`Find the consonant that says “${x.r}”`,say:x.l,sayEn:x.r,afterEn:x.r,
+    opts:opts.map(i=>({L:MEI[i].l,c:GROUPS[MEI[i].g].c})),ans:opts.indexOf(a),after:x.l};
+ },
+ uyirmei(r,k){
+  const m=Math.floor(k/12),u=k%12,res=um(m,u);
+  if(r%2){
+    const opts=shuffle([m,...pickOthers(18,m,3)]);
+    return{icon:"✂️",eq:`<span class="part res">${res}</span><span class="op">=</span><span class="part">?</span><span class="op">+</span><span class="part u">${UYIR[u].l}</span>`,
+      title:"பிரித்து எழுது!",sub:`Split ${res}: which consonant is hiding?`,say:res,sayEn:umr(m,u),afterEn:`${umr(m,u)}. ${MEI[m].r} plus ${UYIR[u].r}`,
+      opts:opts.map(i=>({L:MEI[i].l,c:"var(--teal)"})),ans:opts.indexOf(m),after:`${res}. ${MEI[m].l}. ${UYIR[u].l}`};
+  }
+  const vs=shuffle([u,...pickOthers(12,u,3)]);
+  return{icon:"🧩",eq:`<span class="part m">${MEI[m].l}</span><span class="op">+</span><span class="part u">${UYIR[u].l}</span><span class="op">=</span><span class="part res">?</span>`,
+    title:"சேர்த்து எழுது!",sub:`Join them: ${MEI[m].r} + ${UYIR[u].r} = ?`,say:`${MEI[m].l}. ${UYIR[u].l}`,sayEn:`${MEI[m].r} plus ${UYIR[u].r}`,afterEn:umr(m,u),
+    opts:vs.map(i=>({L:um(m,i),c:UYIR[i].c})),ans:vs.indexOf(u),after:res};
+ },
+ paz(r,a){
+  const x=PAZ[a],ws=x.t.split(" "),miss=ws.pop();
+  const others=shuffle(PAZ.map(p=>p.t.split(" ").pop()).filter(w=>w!==miss)).slice(0,2);
+  const opts=shuffle([miss,...others]);
+  return{icon:x.p,title:`${ws.join(" ")} <span class="blank"></span>`,sub:"Fill in the missing word",say:ws.join(" "),sayEn:x.r.split(" ").slice(0,-1).join(" "),afterEn:x.r,words:true,
+    opts:opts.map((w,i)=>({L:w,c:COLORS[i]})),ans:opts.indexOf(miss),after:x.t,explain:x.en};
+ }
+};
+
+const ROUNDS=10;let game;
+const DECK={uyir:12,mei:18,uyirmei:216,paz:PAZ.length};
+function newGame(k){game={k,round:0,results:[],tries:0,locked:false,deck:shuffle([...Array(DECK[k]).keys()])};nextQ()}
+function nextQ(){if(game.round>=Math.min(ROUNDS,game.deck.length))return endGame();game.q=GEN[game.k](game.round,game.deck[game.round]);game.tries=0;renderQ()}
+function renderQ(){
+  const q=game.q,N=Math.min(ROUNDS,game.deck.length);
+  body(`<div class="col">
+    <div class="prog">${Array.from({length:N},(_,i)=>`<i class="${i<game.round?(game.results[i]?"ok":""):i===game.round?"now":""}"></i>`).join("")}</div>
+    <div class="q"><div class="qpic" aria-hidden="true">${q.icon}</div>
+      <div class="qt">${q.eq?`<div class="eq small qeq">${q.eq}</div>`:""}<b>${q.title}</b><span>${q.sub}</span></div>
+      <button class="say" id="say" aria-label="Hear again">🔊</button></div>
+    <div class="opts ${q.words?"words":""}">${q.opts.map((o,i)=>`<button class="tile opt" style="--c:${o.c}" data-i="${i}"><span class="L">${o.L}</span></button>`).join("")}</div>
+    <div class="feedback" id="fb" aria-live="polite"></div>
+  </div>`);
+  const sayQ=()=>speak(q.say,q.sayEn);sayQ();$("say").onclick=sayQ;
+  $("body").querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b));
+}
+function pick(b){
+  const i=+b.dataset.i,fb=$("fb"),q=game.q;
+  if(b.classList.contains("wrong")||game.locked)return;
+  if(i===q.ans){
+    game.locked=true;b.classList.add("pop","right");yay();
+    const first=game.tries===0;game.results.push(first);if(first)addStars(1);
+    fb.className="feedback ok";fb.innerHTML=(first?"சூப்பர்! ★ Super!":"சரி! Well done!")+(q.explain?`<div class="en">${q.explain}</div>`:"");
+    speak(q.after,q.afterEn);
+    setTimeout(()=>{game.locked=false;game.round++;nextQ()},q.explain?2600:1400);
+  }else{
+    game.tries++;b.classList.add("shake","wrong");oops();
+    fb.className="feedback no";fb.textContent="மீண்டும் முயற்சி! Try again";
+  }
+}
+function endGame(){
+  const N=game.results.length,ok=game.results.filter(Boolean).length,k=game.k,big=ok>=N-1;
+  const perfect=ok===N;
+  const msg=perfect?["அருமை! முழு மதிப்பெண்!","Perfect score! Milo is clapping for you!"]:big?["சூப்பர்! கை தட்டுங்க!","Amazing! Milo is clapping for you!"]:ok>=N*.6?["நல்லது!","Great job! Play again to get them all."]:["நன்று!","Good try! Visit Learn, then play again."];
+  if(perfect)addStars(5);
+  const s=Math.ceil(ok/N*5);
+  body(`<div class="card" style="--c:var(--gold)">
+    <div class="${big?"trophy":"endmilo pop"}" aria-hidden="true">${big?"🏆":"🐰"}</div>
+    ${big?`<div class="clapline" aria-hidden="true">👏 👏 👏</div>`:""}
+    <div class="word">${msg[0]}</div>
+    <div class="endstars" id="es" aria-label="${s} of 5 stars">${"<i>★</i>".repeat(5)}</div>
+    <div class="en">${ok} / ${N} first-try answers. ${msg[1]}${perfect?" Bonus +5 ★!":""}</div>
+    <div class="row" style="margin-top:12px"><button class="btn main" id="again">மீண்டும் விளையாடு</button><button class="btn" id="hm">முகப்பு</button></div>
+  </div>`);
+  const es=[...$("es").children];
+  es.slice(0,s).forEach((e,i)=>setTimeout(()=>{e.classList.add("on");tone([880+i*140],.1)},350+i*260));
+  if(big){setTimeout(()=>{claps(perfect?3.4:2.6);starBurst(perfect?40:26);confetti(perfect?40:24)},350+s*260)}
+  else if(ok>=N*.6)setTimeout(()=>confetti(),350+s*260);
+  $("again").onclick=()=>newGame(k);$("hm").onclick=home;
+}
+
+$("home").onclick=home;
+$("toastX").onclick=()=>$("toast").hidden=true;
+home();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>

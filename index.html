@@ -48,6 +48,7 @@
   --display:"Arima","Noto Sans Tamil","Latha",Georgia,serif;
   --body:"Catamaran","Noto Sans Tamil",system-ui,sans-serif;
 }
+[hidden]{display:none!important}
 html,body{height:100%}
 body{background:var(--night);color:var(--ivory);font-family:var(--body);font-size:16px;overflow-x:hidden;
   background-image:radial-gradient(rgba(233,196,106,.09) 1.1px,transparent 1.3px);background-size:26px 26px}
@@ -250,6 +251,42 @@ h1 .gold{animation:shimmer 6s ease-in-out infinite}
 .trophy{font-size:84px;line-height:1;filter:drop-shadow(0 0 26px rgba(233,196,106,.6));animation:pop .6s,bob 2.4s ease-in-out .6s infinite}
 .clapline{font-size:22px;letter-spacing:.2em}
 .endmilo{font-size:76px;line-height:1}
+/* levels */
+.lvl{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--hair)}
+.lvlb{font-family:var(--display);font-weight:700;font-size:15px;white-space:nowrap;background:var(--goldfill);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lvlpath{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+.lvlpath i{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.1)}
+.lvlpath i.on{background:var(--goldfill);box-shadow:0 0 8px rgba(233,196,106,.5)}
+.lvln{font-size:13px;color:var(--mist);font-variant-numeric:tabular-nums}
+.mod.locked{border-color:rgba(255,255,255,.06)}
+.mod.locked .glyph{background:linear-gradient(160deg,#2A2550,#1A1636);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.mod.locked .glyph::after{border-color:rgba(255,255,255,.08)}
+.mod.locked b{color:var(--mist)}
+.mod .glyph .lock{font-size:30px;opacity:.85;filter:grayscale(.3)}
+.mod.locked .glyph{display:grid;place-items:center}
+.medal{position:absolute;top:4px;right:6px;font-size:26px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5));z-index:1}
+.lockbar i{background:rgba(255,255,255,.28)!important}
+.parentlink{align-self:center;border:0;background:transparent;color:var(--mist);font-size:13px;padding:8px 14px;border-radius:99px}
+.parentlink:hover{color:var(--ivory)}
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));background:rgba(8,6,20,.62);backdrop-filter:blur(6px)}
+.sheet-in{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:24px 20px 20px;border-radius:30px;
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--line);box-shadow:0 -10px 60px rgba(0,0,0,.6);animation:sheetup .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes sheetup{from{transform:translateY(40px);opacity:0}}
+.sh-milo{font-size:56px;line-height:1;animation:bob 3s ease-in-out infinite}
+.sh-t{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.25}
+.sh-p{margin:0;color:var(--mist);font-size:15px;line-height:1.5}
+.sh-p.small{font-size:13px}
+.sh-p b{color:var(--ivory)}
+.req{font-family:var(--display);font-weight:700;font-size:18px;color:var(--gold)}
+.reqbar{width:80%;height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.reqbar i{display:block;height:100%;background:var(--goldfill)}
+.pgin{width:140px;text-align:center;font:700 28px var(--display);color:var(--ivory);background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:8px}
+.pgin:focus{outline:2px solid var(--gold)}
+.unlockfx{position:relative;width:150px}
+.unlockfx .glyph{height:100px;border-radius:20px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:40px;color:var(--ivory);
+  background:radial-gradient(120% 90% at 30% 15%,color-mix(in srgb,var(--c) 70%,white 30%),var(--c) 45%,color-mix(in srgb,var(--c) 55%,black) 100%);box-shadow:0 0 40px color-mix(in srgb,var(--c) 70%,transparent);animation:pop .6s}
+.lockopen{position:absolute;right:-14px;top:-16px;font-size:38px;animation:pop .6s .2s both}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -267,6 +304,7 @@ h1 .gold{animation:shimmer 6s ease-in-out infinite}
 </div>
 <div class="toast" id="toast" role="status" hidden><b>🔇 சத்தம் வரவில்லையா?</b>Phone silent mode off pannunga, volume yethunga. Phone-oda Text-to-speech settings-la Google voice on-a irukka-nu paarunga.<button class="btn sm" id="toastX">சரி</button></div>
 <div class="confetti" id="confetti" aria-hidden="true"></div>
+<div class="sheet" id="sheet" hidden><div class="sheet-in" id="sheetIn" role="dialog" aria-modal="true"></div></div>
 
 <script>
 const COLORS=["var(--coral)","var(--teal)","var(--grape)","var(--leaf)"];
@@ -315,7 +353,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let stars=store.get("kk_stars",0);
 const seen={}; ["trace","uyir","mei","uyirmei","paz"].forEach(k=>seen[k]=new Set(store.get("kk_seen_"+k,[])));
-function markSeen(mod,key){if(seen[mod].has(key))return;seen[mod].add(key);store.set("kk_seen_"+mod,[...seen[mod]]);addStars(1);tone([660,880])}
+function markSeen(mod,key){if(seen[mod].has(key))return;seen[mod].add(key);store.set("kk_seen_"+mod,[...seen[mod]]);addStars(1);tone([660,880]);if(typeof checkUnlocks==="function")checkUnlocks()}
 const starsEl=document.getElementById("stars");
 function addStars(n){stars+=n;store.set("kk_stars",stars);starsEl.textContent="★ "+stars;starsEl.classList.remove("pop");void starsEl.offsetWidth;starsEl.classList.add("pop")}
 starsEl.textContent="★ "+stars;
@@ -332,20 +370,32 @@ else $("voiceNote").textContent="This browser can't speak. Ask a grown-up to rea
 const plain=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"");
 let lastHelp=0;
 function soundHelp(){if(Date.now()-lastHelp<15000)return;lastHelp=Date.now();const t=$("toast");t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,7000)}
+/* voice speed: parents can change it; slow by default for small kids */
+const SPEEDS={slow:{ta:.62,en:.6,gap:550,label:"🐢 Slow"},normal:{ta:.8,en:.75,gap:300,label:"🐰 Normal"}};
+let voiceSpeed=store.get("kk_speed","slow");if(!SPEEDS[voiceSpeed])voiceSpeed="slow";
+let speakTimers=[];
 function speak(ta,en){
   if(!("speechSynthesis" in window)){soundHelp();return}
   try{
     if(!taVoice&&!enVoice)pickVoice();
-    const useTa=!!taVoice||!en;
-    const u=new SpeechSynthesisUtterance(useTa?ta:plain(en));
-    u.lang=useTa?"ta-IN":(enVoice?enVoice.lang:"en-IN");
-    const v=useTa?taVoice:enVoice;if(v)u.voice=v;
-    u.rate=useTa?.88:.82;u.pitch=1.95;u.volume=1;
-    let started=false;u.onstart=()=>{started=true;$("toast").hidden=true;$("home").classList.add("talk")};u.onend=()=>$("home").classList.remove("talk");
-    u.onerror=e=>{$("home").classList.remove("talk");if(e.error!=="interrupted"&&e.error!=="canceled")soundHelp()};
+    const useTa=!!taVoice||!en,sp=SPEEDS[voiceSpeed];
+    /* say each part separately ("அ" … pause … "அம்மா") so kids can hear the letter on its own */
+    const parts=String(useTa?ta:plain(en)).split(/[.,]\s+/).map(x=>x.trim()).filter(Boolean);
+    speakTimers.forEach(clearTimeout);speakTimers=[];
     speechSynthesis.cancel();
-    tone([1400,1900],.05);setTimeout(()=>{try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){soundHelp()}},90);
-    setTimeout(()=>{if(!started&&!speechSynthesis.speaking)soundHelp()},2600);
+    let started=false;
+    const sayPart=i=>{
+      const u=new SpeechSynthesisUtterance(parts[i]);
+      u.lang=useTa?"ta-IN":(enVoice?enVoice.lang:"en-IN");
+      const v=useTa?taVoice:enVoice;if(v)u.voice=v;
+      u.rate=useTa?sp.ta:sp.en;u.pitch=1.95;u.volume=1;
+      u.onstart=()=>{started=true;$("toast").hidden=true;$("home").classList.add("talk")};
+      u.onend=()=>{$("home").classList.remove("talk");if(i+1<parts.length)speakTimers.push(setTimeout(()=>sayPart(i+1),sp.gap))};
+      u.onerror=e=>{$("home").classList.remove("talk");if(e.error!=="interrupted"&&e.error!=="canceled")soundHelp()};
+      try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){soundHelp()}
+    };
+    tone([1400,1900],.05);speakTimers.push(setTimeout(()=>sayPart(0),90));
+    speakTimers.push(setTimeout(()=>{if(!started&&!speechSynthesis.speaking)soundHelp()},2600));
   }catch(e){soundHelp()}
 }
 let ac=null;
@@ -379,17 +429,103 @@ const MODS={
  paz:{ta:"பழமொழி",en:"Proverbs · "+PAZ.length+" sayings",glyph:"💬",c:"var(--leaf)",total:PAZ.length}
 };
 
+/* ---------- LEVELS & UNLOCKS ---------- */
+let best=store.get("kk_best",{});
+let unlockAll=store.get("kk_unlock_all",false);
+let opened=new Set(store.get("kk_opened",["uyir"]));
+const UNLOCK={
+ tuyir:{type:"seen",mod:"uyir",n:12,ta:"உயிர் எழுத்து 12-ம் பார்",en:"See all 12 vowels"},
+ mei:{type:"score",mod:"uyir",n:7,ta:"உயிர் விளையாட்டில் 7/10 எடு",en:"Score 7/10 in the vowel game"},
+ tmei:{type:"seen",mod:"mei",n:18,ta:"மெய் எழுத்து 18-ம் பார்",en:"See all 18 consonants"},
+ uyirmei:{type:"score",mod:"mei",n:7,ta:"மெய் விளையாட்டில் 7/10 எடு",en:"Score 7/10 in the consonant game"},
+ paz:{type:"score",mod:"uyirmei",n:7,ta:"உயிர்மெய் விளையாட்டில் 7/10 எடு",en:"Score 7/10 in the letter-maker game"}
+};
+const reqHave=u=>u.type==="seen"?seen[u.mod].size:(best[u.mod]||0);
+const isOpen=k=>unlockAll||!UNLOCK[k]||reqHave(UNLOCK[k])>=UNLOCK[k].n;
+const traced=set=>[...seen.trace].filter(x=>x.startsWith(set+":")).length;
+function medal(k){
+  const m=MODS[k];
+  if(m.set){const t=traced(m.set);return t>=m.total?"🥇":t>=m.total/2?"🥈":t>=m.total/4?"🥉":""}
+  const b=best[k]||0;return b>=10?"🥇":b>=9?"🥈":b>=7?"🥉":"";
+}
+function checkUnlocks(){
+  const fresh=Object.keys(MODS).filter(k=>isOpen(k)&&!opened.has(k));
+  if(!fresh.length)return;
+  fresh.forEach(k=>opened.add(k));store.set("kk_opened",[...opened]);
+  if(unlockAll)return;
+  const k=fresh[0],m=MODS[k];
+  setTimeout(()=>{
+    sheet(`<div class="unlockfx" style="--c:${m.c}"><div class="glyph">${m.glyph}</div><span class="lockopen">🔓</span></div>
+      <b class="sh-t">புதிய பகுதி திறந்தது!</b><p class="sh-p">${m.ta} is now open. Milo is so proud of you!</p>
+      <div class="row"><button class="btn main" id="shGo">திற · Open →</button><button class="btn" id="shX">பிறகு · Later</button></div>`);
+    $("shGo").onclick=()=>{closeSheet();openMod(k,"learn")};
+    claps(2);starBurst(24);
+  },1400);
+}
+function sheet(html){const sh=$("sheet");$("sheetIn").innerHTML=html;sh.hidden=false;const x=$("shX");if(x)x.onclick=closeSheet}
+function closeSheet(){$("sheet").hidden=true}
+function lockedSheet(k){
+  const u=UNLOCK[k],m=MODS[k],src=MODS[u.mod],have=Math.min(reqHave(u),u.n);
+  sheet(`<div class="sh-milo">🐰</div><b class="sh-t">இது இன்னும் பூட்டியிருக்கு!</b>
+    <p class="sh-p">To open <b>${m.ta}</b>:<br><span class="req">${u.ta}</span><br>${u.en}</p>
+    <div class="reqbar"><i style="width:${Math.round(have/u.n*100)}%"></i></div>
+    <p class="sh-p small">${u.type==="seen"?`${have} / ${u.n} letters seen`:`Best score so far: ${best[u.mod]||0} / 10`}</p>
+    <div class="row"><button class="btn main" id="shGo">${src.ta} →</button><button class="btn" id="shX">சரி</button></div>`);
+  speak("இது இன்னும் பூட்டியிருக்கு","This is still locked");
+  $("shGo").onclick=()=>{closeSheet();openMod(u.mod,u.type==="seen"?"learn":"play")};
+}
+function parentGate(){
+  const a=11+Math.random()*30|0,b=6+Math.random()*20|0;
+  sheet(`<div class="sh-milo">👪</div><b class="sh-t">பெற்றோர் பகுதி · Parents</b>
+    <p class="sh-p">Solve to continue: <b>${a} + ${b} = ?</b></p>
+    <input id="pgIn" class="pgin" inputmode="numeric" autocomplete="off" aria-label="Answer">
+    <p class="sh-p small" id="pgMsg"></p>
+    <div class="row"><button class="btn main" id="pgOk">தொடர் · Continue</button><button class="btn" id="shX">மூடு</button></div>`);
+  $("pgOk").onclick=()=>{
+    if(+$("pgIn").value!==a+b){$("pgMsg").textContent="That's not right. Try again.";return}
+    parentPanel();
+  };
+}
+function parentPanel(){
+  sheet(`<div class="sh-milo">👪</div><b class="sh-t">Parent settings</b>
+    <p class="sh-p">Stars: <b>${stars}</b> · Letters seen: <b>${seen.uyir.size+seen.mei.size}/30</b> · Letters written: <b>${seen.trace.size}/30</b></p>
+    <div class="col" style="gap:10px">
+      <div class="seg" role="group" aria-label="Voice speed">${Object.entries(SPEEDS).map(([k,v])=>`<button class="segb" data-sp="${k}" aria-pressed="${voiceSpeed===k}">${v.label}</button>`).join("")}</div>
+      <button class="btn ${unlockAll?"":"main"}" id="pAll">${unlockAll?"🔒 Lock levels again":"🔓 Unlock all levels"}</button>
+      <button class="btn" id="pReset">↺ Reset all progress</button>
+      <p class="sh-p small" id="pMsg"></p>
+      <button class="btn" id="shX">மூடு · Close</button>
+    </div>`);
+  document.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{voiceSpeed=b.dataset.sp;store.set("kk_speed",voiceSpeed);document.querySelectorAll("[data-sp]").forEach(x=>x.setAttribute("aria-pressed",x===b));speak("அ. அம்மா","a. Amma")});
+  $("pAll").onclick=()=>{unlockAll=!unlockAll;store.set("kk_unlock_all",unlockAll);closeSheet();home()};
+  let armed=false;
+  $("pReset").onclick=()=>{
+    if(!armed){armed=true;$("pReset").textContent="Tap again to erase everything";$("pMsg").textContent="This clears stars, scores and progress on this phone.";return}
+    ["kk_stars","kk_best","kk_opened","kk_unlock_all"].concat(Object.keys(seen).map(k=>"kk_seen_"+k)).forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
+    stars=0;starsEl.textContent="★ 0";best={};unlockAll=false;opened=new Set(["uyir"]);Object.keys(seen).forEach(k=>seen[k]=new Set());
+    closeSheet();home();
+  };
+}
+
 function home(){
+  const keys=Object.keys(MODS),openN=keys.filter(isOpen).length,next=keys.find(k=>!isOpen(k));
   h(`<div class="col">
-    <div class="bubble"><span class="ta">இன்று என்ன கற்போம்?</span>What shall we learn today? Pick one!</div>
-    <div class="mods">${Object.entries(MODS).map(([k,m])=>{const got=m.set?[...seen.trace].filter(x=>x.startsWith(m.set+":")).length:seen[k].size;const pct=Math.round(got/m.total*100);return `
-      <button class="mod" style="--c:${m.c}" data-k="${k}">
-        <div class="glyph" aria-hidden="true">${m.glyph}</div>
-        <div class="mt">${m.isNew?'<span class="newtag">புதிது · New</span>':""}<b>${m.ta}</b><small>${m.en}</small>
-        <div class="bar" aria-label="${pct}% explored"><i style="width:${Math.max(pct,2)}%"></i></div></div>
+    <div class="bubble"><span class="ta">இன்று என்ன கற்போம்?</span>${next?`Next to unlock: <b style="color:var(--ivory)">${MODS[next].ta}</b>`:"Everything is open. You are a Tamil star!"}</div>
+    <div class="lvl"><span class="lvlb">லெவல் ${openN}</span><div class="lvlpath">${keys.map(k=>`<i class="${isOpen(k)?"on":""}"></i>`).join("")}</div><span class="lvln">${openN}/${keys.length}</span></div>
+    <div class="mods">${keys.map(k=>{const m=MODS[k],open=isOpen(k);
+      const got=m.set?traced(m.set):seen[k].size;const pct=Math.round(got/m.total*100);
+      const u=UNLOCK[k],md=open?medal(k):"";
+      return `
+      <button class="mod ${open?"":"locked"}" style="--c:${m.c}" data-k="${k}">
+        <div class="glyph" aria-hidden="true">${open?m.glyph:'<span class="lock">🔒</span>'}</div>
+        ${md?`<span class="medal" aria-label="medal">${md}</span>`:""}
+        <div class="mt">${m.isNew&&open?'<span class="newtag">புதிது · New</span>':""}<b>${m.ta}</b><small>${open?m.en:"🔒 "+u.en}</small>
+        <div class="bar ${open?"":"lockbar"}" aria-label="${open?pct+"% explored":"unlock progress"}"><i style="width:${Math.max(open?pct:Math.round(Math.min(reqHave(u),u.n)/u.n*100),2)}%"></i></div></div>
       </button>`}).join("")}</div>
+    <button class="parentlink" id="par">👪 பெற்றோர் · Parents</button>
   </div>`);
-  view.querySelectorAll(".mod").forEach(b=>b.onclick=()=>openMod(b.dataset.k,"learn"));
+  view.querySelectorAll(".mod").forEach(b=>b.onclick=()=>isOpen(b.dataset.k)?openMod(b.dataset.k,"learn"):lockedSheet(b.dataset.k));
+  $("par").onclick=parentGate;
 }
 
 function openMod(k,tab){
@@ -689,6 +825,7 @@ function endGame(){
   const perfect=ok===N;
   const msg=perfect?["அருமை! முழு மதிப்பெண்!","Perfect score! Milo is clapping for you!"]:big?["சூப்பர்! கை தட்டுங்க!","Amazing! Milo is clapping for you!"]:ok>=N*.6?["நல்லது!","Great job! Play again to get them all."]:["நன்று!","Good try! Visit Learn, then play again."];
   if(perfect)addStars(5);
+  if(ok>(best[k]||0)){best[k]=ok;store.set("kk_best",best)}
   const s=Math.ceil(ok/N*5);
   body(`<div class="card" style="--c:var(--gold)">
     <div class="${big?"trophy":"endmilo pop"}" aria-hidden="true">${big?"🏆":"🐰"}</div>
@@ -703,10 +840,13 @@ function endGame(){
   if(big){setTimeout(()=>{claps(perfect?3.4:2.6);starBurst(perfect?40:26);confetti(perfect?40:24)},350+s*260)}
   else if(ok>=N*.6)setTimeout(()=>confetti(),350+s*260);
   $("again").onclick=()=>newGame(k);$("hm").onclick=home;
+  setTimeout(checkUnlocks,big?2200:600);
 }
 
 $("home").onclick=home;
 $("toastX").onclick=()=>$("toast").hidden=true;
+$("sheet").onclick=e=>{if(e.target.id==="sheet")closeSheet()};
+opened=new Set([...opened,...Object.keys(MODS).filter(isOpen)]);store.set("kk_opened",[...opened]);
 home();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>
